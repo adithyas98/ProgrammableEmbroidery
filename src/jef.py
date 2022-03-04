@@ -171,8 +171,9 @@ class Jef:
                          50, 0, 0, 0,#Top boundary dist from center (in 0.1mm)
                          50, 0, 0, 0,#Right boundary dist from center (in 0.1mm)
                          50, 0, 0, 0,#Bottom boundary dist from center (in 0.1mm)
-                          5, 0, 0, 0,#Thread Color (white)
-                         13, 0, 0, 0,#Thread type (unknown)
+                         5, 0, 0, 0,#Thread Color (white)
+                         40, 0, 0, 0, # Thread Color (Pink)
+                         14, 0, 0, 0, # Thread Color (Violet)
                     ]
         return jefBytes
 
