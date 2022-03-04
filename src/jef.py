@@ -7,10 +7,9 @@ class Jef:
     This class will implement basic shapes that can be used to build 
     the final design
     '''
-    def __init__(self):
+    def __init__(self,stitch=10):
         self.mode = None #This will hold the current mode
-        self.stitch = 10 #The length of the steps we make
-        #   Can take on one of three values: 1,2,16
+        self.stitch = stitch #The length of the steps we make
 
 
     def changeState(self,state):
@@ -29,7 +28,51 @@ class Jef:
         self.mode = state
         #We can now return the state
         return [128,state]
-    
+    def square(self,dim):
+        '''
+        Will create a square at the specified position. The position will be at
+        the center of the square
+        Inputs:
+            - dim
+        Output:
+            - Code to make a square
+        '''
+        squareStitches = []
+        #convert dim into an int
+        dim = int(dim)
+        for i in range(0,dim): 
+            squareStitches += [ self.stitch, 0,]
+        for i in range(0,dim): 
+            squareStitches += [ 0, self.stitch,]
+        for i in range(0,dim): 
+            squareStitches += [256-self.stitch, 0,]
+        for i in range(0,dim): 
+            squareStitches += [0, 256-self.stitch,]
+        return squareStitches
+
+    def sqFractal(self,x,y,dim,level):
+        '''
+        A function that will create the fractal shape. 
+        Inputs:
+            - x,y: How much to move the bottom left corner of the square
+                    before constructing it
+            - dim: The dimension of the square
+            - level: the level of depth/complexity (int)
+        Outputs:
+            - the code to create the fractal pattern
+        '''
+        fractal = []#holds the fractal
+        for i in range(level):
+            #make the square
+            #move the bottom left to the right position
+            fractal += self.move(x,y)
+            #draw the square
+            fractal += self.square(dim)
+            #Now we want to dynamically update the parameters
+            x = int(dim/2)
+            y = int(dim/2)
+            dim = int(dim/2)
+        return fractal
     def circle(self,radius):
         '''
         Creates a circle with the specified radius
@@ -70,6 +113,21 @@ class Jef:
                 in2y = 256 + in2y
             zigStitches += [in1x, in1y, in2x, in2y] 
         return zigStitches
+    def move(self,x,y):
+        '''
+        Will move the needs to the specified location
+        Inputs:
+            - x: how much to move the stitch in the x direction
+            - y: how much to move the stitch in the y direction
+        Ouput:
+            - code to move the stitch
+        '''
+        if x < 0:
+            #Then we need to subtract from 256
+            x = 256 + x
+        if y < 0:
+            y = 256 + y
+        return [0,0,x,y,]
 
     def getHeader(self,num_stitches):
         '''
@@ -123,10 +181,13 @@ if __name__ == '__main__':
     t = j.changeState(1)
     sow = j.changeState(2)
     circle = j.zigZag(j.circle(4))
+    square = j.square(8)
     head = j.getHeader(len(circle)//2)
     lastStitch = j.changeState(16)
-    data = bytes(head) + bytes(sow) + bytes([0,0,]) + bytes(circle) + bytes(t) + bytes([0,0,]) +  bytes(lastStitch)
-
+    fractal = j.sqFractal(40,40,16,8)
+    data = bytes(head) + bytes(sow)  
+    data += bytes(fractal)
+    data += bytes(t) + bytes([0,0,]) +  bytes(lastStitch)
     with open('circle.jef','wb') as f:
         f.write(data)
 
