@@ -73,6 +73,23 @@ class Jef:
             y = int(dim/2)
             dim = int(dim/2)
         return fractal
+    def triangle(self,dim): 
+        '''
+        This method will output the stitches to make an equilateral triangle
+        Input:
+            -dim: the dimension of the triangle
+        Output:
+            - the codes to make a triangle
+        '''
+        triangleStitches = []
+        for t in range(0,dim):
+            triangleStitches += [ int(self.stitch*math.cos(math.pi/3)), int(self.stitch*math.sin(math.pi/3)),]
+        for t in range(0,dim):
+            triangleStitches += [ int(self.stitch*math.cos(math.pi/3)), 256-int(self.stitch*math.sin(math.pi/3)),]
+        for t in range(0,dim): 
+            triangleStitches += [256-self.stitch, 0,]
+        return triangleStitches
+
     def circle(self,radius):
         '''
         Creates a circle with the specified radius

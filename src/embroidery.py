@@ -38,29 +38,43 @@ class Embroidery:
         Output:
             - Stitch pattern
         '''
+        
         #start out the sowing by changing the mode to sowing mode
         self.data += self.jef.changeState(2)
+        
 
-        #draw a square
-        self.data += self.jef.move(40,-30)
-        self.data += self.jef.zigZag(self.jef.square(5))
+        #draw a circle
+        self.data += self.jef.move(50,200)
+        self.data += self.jef.circle(5)
+
+        #currently at: -5mm,5mm
+        #draw a circle
+        self.data += self.jef.move(50,-25)
+        self.data += self.jef.zigZag(self.jef.circle(5))
+
+        #currently at: 0mm,2.5mm
+        self.data += self.jef.move(50,15)
+        self.data += self.jef.triangle(5)
+        
+        #currently at: 5mm,4mm
 
         #Chnage the thread
         self.data += self.jef.changeState(1)
         self.data += self.jef.changeState(2)#change back to sow
         #Now we can make our fractal
         level = self.qdata['level']['data']
-        self.data += self.jef.sqFractal(-40,0,8,level)
+        self.data += self.jef.sqFractal(-50,-20,8,level)
+
+        #Currently at 0mm,0mm
+
 
         #change thread and draw a circle
-        self.data += self.jef.move(0,-30)
         self.data += self.jef.changeState(1)
+        self.data += self.jef.move(-50,-30)
 
 
-        self.data += self.jef.changeState(2)#change back to sow
-        self.data += self.jef.zigZag(self.jef.circle(4))
-
-
+        
+        
         
 
         #Create last stich code
